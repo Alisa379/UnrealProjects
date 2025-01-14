@@ -45,11 +45,12 @@ ACharacterCharacter::ACharacterCharacter()
 	CameraBoom->TargetArmLength = 400.0f; // The camera follows at this distance behind the character	
 	CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
     
-    MouseWheelUp = CreateDefaultSubobject<USpringArmComponent>(TEXT("MouseWheelUp"));
-    MouseWheelUp->SetupAttachment(CameraBoom);
+    SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>("SpringArm");
+    SpringArmComponent->SetupAttachment(GetRootComponent());
     
-    MouseWheelDown = CreateDefaultSubobject<USpringArmComponent>(TEXT("MouseWheelDown"));
-    MouseWheelDown->SetupAttachment(CameraBoom);
+    CameraComponent = CreateDefaultSubobject<UCameraComponent>("CameraComponent");
+    CameraComponent->SetupAttachment(SpringArmComponent);
+
     
 	// Create a follow camera
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
@@ -93,9 +94,9 @@ void ACharacterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ACharacterCharacter::Look);
         
-        InputComponent->BindAction("MouseWheelUp", this, &ACharacterCharacter::SetMouseWheelUp);
+        PlayerInputComponent->BindAction("MouseWheelUp", this, &ACharacterCharacter::SetMouseWheelUp);
         
-        InputComponent->BindAction("MouseWheelDown", this, &ACharacterCharacter::SetMouseWheelDown);
+        PlayerInputComponent->BindAction("MouseWheelDown", this, &ACharacterCharacter::SetMouseWheelDown);
 	}
 	else
 	{
